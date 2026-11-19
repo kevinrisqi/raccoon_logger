@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:raccoon/model/raccoon_http_call.dart';
 import 'package:raccoon/model/raccoon_http_error.dart';
 import 'package:raccoon/model/raccoon_http_response.dart';
+import 'package:raccoon/model/raccoon_log_entry.dart';
 import 'package:raccoon/view/raccoon_shell.dart';
 
 /// Singleton backing store for captured HTTP calls and inspector state.
@@ -141,6 +142,33 @@ class RaccoonService extends ChangeNotifier {
     } else {
       log('No call found with id $requestId to update the response.');
     }
+  }
+
+  /// Maximum number of log entries kept; the oldest are dropped first.
+  static const int maxLogs = 1000;
+
+  final List<RaccoonLogEntry> _logs = <RaccoonLogEntry>[];
+
+  /// Read-only view of recorded log entries in insertion order.
+  UnmodifiableListView<RaccoonLogEntry> get logs =>
+      UnmodifiableListView<RaccoonLogEntry>(_logs);
+
+  /// Records a log entry shown in the inspector's Logs screen.
+  void addLog(RaccoonLogEntry entry) {
+    _logs.add(entry);
+    if (_logs.length > maxLogs) {
+      _logs.removeRange(0, _logs.length - maxLogs);
+    }
+    notifyListeners();
+  }
+
+  /// Clears all recorded log entries and notifies listeners.
+  void clearLogs() {
+    if (_logs.isEmpty) {
+      return;
+    }
+    _logs.clear();
+    notifyListeners();
   }
 
   /// Clears all captured calls and notifies listeners.

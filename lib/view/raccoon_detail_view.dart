@@ -5,6 +5,7 @@ import 'package:raccoon/model/raccoon_http_call.dart';
 import 'package:raccoon/raccoon_service.dart';
 import 'package:raccoon/view/components/raccoon_error_widget.dart';
 import 'package:raccoon/view/components/raccoon_headers_widget.dart';
+import 'package:raccoon/view/components/raccoon_request_widget.dart';
 import 'package:raccoon/view/components/raccoon_response_widget.dart';
 
 class RaccoonDetailView extends StatefulWidget {
@@ -160,16 +161,21 @@ class _RaccoonDetailViewState extends State<RaccoonDetailView> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("HTTP Call Detail"),
           bottom: const TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
             dividerHeight: 0,
             labelStyle: TextStyle(fontWeight: FontWeight.bold),
             tabs: [
               Tab(
                 text: "Headers",
+              ),
+              Tab(
+                text: "Request",
               ),
               Tab(
                 text: "Response",
@@ -196,6 +202,7 @@ class _RaccoonDetailViewState extends State<RaccoonDetailView> {
                   RaccoonService().dioInstance != null ? _handleReplay : null,
               isReplaying: _isReplaying,
             ),
+            RaccoonRequestWidget(call: widget.call),
             RaccoonResponseWidget(call: widget.call),
             RaccoonErrorWidget(call: widget.call),
           ],
