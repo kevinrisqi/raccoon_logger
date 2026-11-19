@@ -1,3 +1,15 @@
+## Unreleased
+
+* **Feature**: Request tab in the call detail view
+  * Shows form fields (multipart or url-encoded), JSON, or raw body
+  * JSON field values are pretty-printed, long values are shortened with "Show all"
+  * Base64 JPEG/PNG field values are previewed as images
+  * Copy button per field and for the whole body
+* **Feature**: Logs screen (menu > Logs) for app messages recorded with `Raccoon().log(...)`
+  * Level, tag, error, search, copy all, long-press to copy one entry
+  * Keeps the latest 1000 entries
+* **Fix**: Detail tabs scroll horizontally so labels are not cut off
+
 ## 0.2.0
 
 * **BREAKING CHANGE**: Simplified navigation API for universal compatibility

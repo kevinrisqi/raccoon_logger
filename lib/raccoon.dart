@@ -4,8 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:raccoon/model/raccoon_http_call.dart';
+import 'package:raccoon/model/raccoon_log_entry.dart';
 
 import 'raccoon_service.dart';
+
+export 'package:raccoon/model/raccoon_log_entry.dart'
+    show RaccoonLogEntry, RaccoonLogLevel;
 
 /// Public facade around [RaccoonService] for quick access inside apps.
 class Raccoon {
@@ -19,6 +23,36 @@ class Raccoon {
 
   /// Snapshot of recorded calls. Use [listenable] to be notified when it changes.
   UnmodifiableListView<RaccoonHttpCall> get calls => _service.calls;
+
+  /// Snapshot of recorded log entries (oldest first).
+  UnmodifiableListView<RaccoonLogEntry> get logs => _service.logs;
+
+  /// Records a log message shown in the inspector's Logs screen (menu > Logs).
+  ///
+  /// Raccoon only stores the message; it does not print it anywhere else.
+  ///
+  /// Example:
+  /// ```dart
+  /// Raccoon().log('Upload started', tag: 'scan');
+  /// Raccoon().log('Upload failed', level: RaccoonLogLevel.error, error: e);
+  /// ```
+  void log(
+    String message, {
+    String? tag,
+    RaccoonLogLevel level = RaccoonLogLevel.info,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    _service.addLog(
+      RaccoonLogEntry(
+        message: message,
+        tag: tag,
+        level: level,
+        error: error,
+        stackTrace: stackTrace,
+      ),
+    );
+  }
 
   /// Listen for inspector visibility changes.
   ValueListenable<bool> get isInspectorOpened =>

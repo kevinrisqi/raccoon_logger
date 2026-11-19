@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:raccoon/model/raccoon_http_call.dart';
 import 'package:raccoon/raccoon_service.dart';
 import 'package:raccoon/view/raccoon_detail_view.dart';
+import 'package:raccoon/view/raccoon_logs_view.dart';
 import 'package:raccoon/view/raccoon_stats_view.dart';
 
 class RaccoonView extends StatefulWidget {
@@ -108,7 +109,13 @@ class _RaccoonViewState extends State<RaccoonView> {
           ),
           PopupMenuButton<String>(
             onSelected: (value) {
-              if (value == 'statistics') {
+              if (value == 'logs') {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => RaccoonLogsView(service: widget.service),
+                  ),
+                );
+              } else if (value == 'statistics') {
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (_) => RaccoonStatsView(service: widget.service),
@@ -119,6 +126,16 @@ class _RaccoonViewState extends State<RaccoonView> {
               }
             },
             itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'logs',
+                child: Row(
+                  children: [
+                    Icon(Icons.subject),
+                    SizedBox(width: 8),
+                    Text('Logs'),
+                  ],
+                ),
+              ),
               const PopupMenuItem(
                 value: 'statistics',
                 child: Row(
